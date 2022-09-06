@@ -1,0 +1,16 @@
+[project]
+name = "pyxart"
+version = "0.1"
+description = "Python implementation of cryptographic asynchronous ratchet trees"
+readme = "README.md"
+authors = [{ name = "Pranay Anchuri", email = "pranay@xmtp.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["group messaging", "key exchange", "DH tree"]
+dependencies = [
+]
+requires-python = ">=3.8"

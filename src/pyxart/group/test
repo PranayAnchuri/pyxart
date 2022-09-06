@@ -1,0 +1,10 @@
+ dh(
+    kdf(
+        dh
+            (
+                tree.right.left.priv,
+                get_pub(tree.right.right.priv)
+            ).pub
+        ),
+        get_pub(kdf(tree.left.pub))
+    )
