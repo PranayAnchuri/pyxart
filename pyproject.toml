@@ -19,6 +19,7 @@ push = true
 
 [tool.poetry]
 name = "pyxart"
+version = "0.1.1"
 description = "Python implementation of Asynchronous Ratchet Trees"
 authors = ["Pranay Anchuri <pranay@xmtp.com>"]
 license = "MIT"
