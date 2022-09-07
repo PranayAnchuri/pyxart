@@ -1,4 +1,4 @@
-from keys import KeyPairCurve25519
+from pyxart.keys import KeyPairCurve25519
 class Client:
 
     def __init__(self, name) -> None:

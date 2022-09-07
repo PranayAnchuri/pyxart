@@ -1,16 +1,38 @@
-[project]
+[tool.bumpver]
+current_version = "2022.1001-alpha"
+version_pattern = "YYYY.BUILD[-TAG]"
+commit_message = "bump version {old_version} -> {new_version}"
+commit = true
+tag = true
+push = true
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = [
+    'current_version = "{version}"',
+]
+
+"README.md" = [
+    "{version}",
+    "{pep440_version}",
+]
+
+
+[tool.poetry]
 name = "pyxart"
-version = "0.1"
-description = "Python implementation of cryptographic asynchronous ratchet trees"
+version = "0.1.0"
+description = "Python implementation of Asynchronous Ratchet Trees"
+authors = ["Pranay Anchuri <pranay@xmtp.com>"]
+license = "MIT"
 readme = "README.md"
-authors = [{ name = "Pranay Anchuri", email = "pranay@xmtp.com" }]
-license = { file = "LICENSE" }
-classifiers = [
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-]
-keywords = ["group messaging", "key exchange", "DH tree"]
-dependencies = [
-]
-requires-python = ">=3.8"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pynacl = "^1.5.0"
+XEdDSA = "^0.6.0"
+networkx = "^2.8.6"
+matplotlib = "^3.5.3"
+cryptography = "^37.0.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

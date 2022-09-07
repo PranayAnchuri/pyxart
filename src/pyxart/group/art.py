@@ -1,6 +1,6 @@
 from turtle import pu
 from itertools import tee
-import keys
+import pyxart.keys as keys
 from nacl.bindings.crypto_scalarmult import crypto_scalarmult
 from collections import namedtuple
 from .tree import ProofNode, nleft, get_sibling, SecretNode, PublicNode, Node

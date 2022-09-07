@@ -1,4 +1,4 @@
-from client import Client
+from pyxart.client import Client
 from collections import namedtuple
 
 Bundle = namedtuple('Bundle', 'iden_key pre_key')
