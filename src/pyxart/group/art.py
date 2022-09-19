@@ -31,18 +31,16 @@ def create_proof_node(node):
     return ProofNode(node.pub)
 
 
-def create_group(clients, server):
+def create_group(members, creator_name, creator_priv_key):
     secrets = []
     setup_key = keys.KeyPairCurve25519.generate()
     creator_leaf_key = keys.KeyPairCurve25519.generate()
-    secrets.append(create_leaf_node(priv=creator_leaf_key.priv, name=f"Group creator's ({clients[0].name})initiation key"))
-    creator = server.getBundle(clients[0].name)
-    for participant in clients[1:]:
-        bundle = server.getBundle(participant.name)
-        leaf_key = keyexchange(setup_key.priv, creator.iden_key.priv, bundle.iden_key.pub, bundle.pre_key.pub)
-        secrets.append(create_leaf_node(priv=leaf_key, name=f"Shared key between ({clients[0].name}, {participant.name})"))
+    secrets.append(create_leaf_node(priv=creator_leaf_key.priv, name=f"Group creator's initiation key"))
+    for participant in members:
+        leaf_key = keyexchange(setup_key.priv, creator_priv_key, participant.iden_key_pub, participant.pre_key_pub)
+        secrets.append(create_leaf_node(priv=leaf_key, name=f"Shared key between ({creator_name}, {participant.name})"))
     tree = compute_tree_secret(secrets)
-    return create_setup_message(tree, clients, setup_key), tree.priv
+    return create_setup_message(tree, members, setup_key, creator_name), tree.priv
 
 def create_copath(leaf_node):
     """
@@ -64,5 +62,5 @@ def create_proof_tree(tree: Node) -> ProofNode:
         proof_root.right.parent = (proof_root, False)
     return proof_root
 
-def create_setup_message(tree, clients, setup_key):
-    return GroupSetupMessage(clients[0].name, [p.name for p in clients[1:]], setup_key.pub, create_proof_tree(tree))
+def create_setup_message(tree, members, setup_key, creator_name):
+    return GroupSetupMessage(creator_name, [creator_name] + [p.name for p in members], setup_key.pub, create_proof_tree(tree))

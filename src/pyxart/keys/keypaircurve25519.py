@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import base64
 
-from pyxart.exceptions import MissingKeyException
+from exceptions import MissingKeyException
 from .keypair import KeyPair
 
 from nacl.bindings import crypto_box_NONCEBYTES

@@ -1,11 +1,15 @@
 from .utils import keyexchange, reduce_path, create_leaf_node
+from .tree import get_leaves
+from .art import create_copath
+import pickle
 
-# functions on the receiver end
-
-def process_group_message(client, server, initiator_name, setup_key_pub, copath):
-    # construct shared secret
-    initiator = server.getBundle(initiator_name)
-    leaf_key = keyexchange(client.pre_key.priv, client.iden_key.priv, initiator.iden_key.pub, setup_key_pub)
+def process_group_message(creation_pickle, client, users):
+    grp = pickle.loads(creation_pickle)
+    leaf_nodes = get_leaves(grp.tree)
+    node = leaf_nodes[grp.participants.index(client.name)]
+    user_mapping = dict([(u.name, u) for u in users])
+    path = [_ for _ in create_copath(node)]
+    leaf_key = keyexchange(client.pre_key.priv, client.iden_key.priv, user_mapping[grp.initiator].iden_key_pub, grp.setup_key)
     secret = create_leaf_node(leaf_key)
-    recon = reduce_path(secret, copath)
+    recon = reduce_path(secret, path)
     return recon.priv
