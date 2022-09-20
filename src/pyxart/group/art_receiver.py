@@ -2,6 +2,7 @@ from .utils import keyexchange, reduce_path, create_leaf_node
 from .tree import get_leaves
 from .art import create_copath
 import pickle
+from ..client import Client
 
 def process_group_message(group, client, users):
     '''Function to construct group secret based on creation message'''
@@ -16,7 +17,8 @@ def process_group_message(group, client, users):
         # use creator key
         leaf_key = client.get_creator_key(group_name)
     else:
-        leaf_key = keyexchange(client.pre_key.priv, client.iden_key.priv, user_mapping[setup_message.initiator].iden_key_pub, setup_message.setup_key)
+        leaf_key = keyexchange(client.get_pre_key_priv(), client.get_iden_key_priv(), user_mapping[setup_message.initiator].iden_key_pub, setup_message.setup_key)
     secret = create_leaf_node(leaf_key)
     recon = reduce_path(secret, path)
+    print(secret, client.get_pre_key_priv(), client.get_iden_key_priv())
     return recon.priv

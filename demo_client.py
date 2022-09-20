@@ -30,7 +30,7 @@ class GroupMessaging(Cmd):
     
     def do_register(self, arg):
         'Register client at the server by sending public keys'
-        response = GroupMessaging.stub.register(pyxart_pb2.ClientRegistration(name=client.name, iden_key_pub=client.iden_key.pub, pre_key_pub=client.pre_key.pub))
+        response = GroupMessaging.stub.register(pyxart_pb2.ClientRegistration(name=client.name, iden_key_pub=client.get_iden_key_pub(), pre_key_pub=client.get_pre_key_pub()))
         print("Message from server: " + response.msg)
 
     def do_get_users(self, arg):
@@ -46,7 +46,7 @@ class GroupMessaging(Cmd):
         for r in response:
             if r.name != client.name:
                 others.append(r)
-        creation_message, secret, creator_key = create_group(others, client.name, client.iden_key.priv)
+        creation_message, secret, creator_key = create_group(others, client.name, client.get_iden_key_priv())
         creation_bytes = pickle.dumps(creation_message)
         response = GroupMessaging.stub.create_group(pyxart_pb2.GroupCreation(art=creation_bytes))
         print(response)
