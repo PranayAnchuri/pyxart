@@ -21,13 +21,13 @@ class PyxartStub(object):
                 )
         self.register = channel.unary_unary(
                 '/Pyxart/register',
-                request_serializer=pyxart__pb2.ClientRegister.SerializeToString,
+                request_serializer=pyxart__pb2.ClientRegistration.SerializeToString,
                 response_deserializer=pyxart__pb2.Pong.FromString,
                 )
         self.get_users = channel.unary_stream(
                 '/Pyxart/get_users',
                 request_serializer=pyxart__pb2.Empty.SerializeToString,
-                response_deserializer=pyxart__pb2.ClientRegister.FromString,
+                response_deserializer=pyxart__pb2.ClientRegistration.FromString,
                 )
         self.get_my_groups = channel.unary_stream(
                 '/Pyxart/get_my_groups',
@@ -106,13 +106,13 @@ def add_PyxartServicer_to_server(servicer, server):
             ),
             'register': grpc.unary_unary_rpc_method_handler(
                     servicer.register,
-                    request_deserializer=pyxart__pb2.ClientRegister.FromString,
+                    request_deserializer=pyxart__pb2.ClientRegistration.FromString,
                     response_serializer=pyxart__pb2.Pong.SerializeToString,
             ),
             'get_users': grpc.unary_stream_rpc_method_handler(
                     servicer.get_users,
                     request_deserializer=pyxart__pb2.Empty.FromString,
-                    response_serializer=pyxart__pb2.ClientRegister.SerializeToString,
+                    response_serializer=pyxart__pb2.ClientRegistration.SerializeToString,
             ),
             'get_my_groups': grpc.unary_stream_rpc_method_handler(
                     servicer.get_my_groups,
@@ -173,7 +173,7 @@ class Pyxart(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Pyxart/register',
-            pyxart__pb2.ClientRegister.SerializeToString,
+            pyxart__pb2.ClientRegistration.SerializeToString,
             pyxart__pb2.Pong.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
@@ -191,7 +191,7 @@ class Pyxart(object):
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/Pyxart/get_users',
             pyxart__pb2.Empty.SerializeToString,
-            pyxart__pb2.ClientRegister.FromString,
+            pyxart__pb2.ClientRegistration.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

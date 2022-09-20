@@ -6,7 +6,7 @@ message Pong {
     required string msg = 1;
 }
 
-message ClientRegister {
+message ClientRegistration {
     required string name = 1;
     required bytes iden_key_pub = 2;
     required bytes pre_key_pub = 3;
@@ -20,7 +20,7 @@ message ClientName {
 }
 
 message GroupCreation {
-    required bytes creation_pickle=1;
+    required bytes art=1;
 }
 
 message GroupInfo {
@@ -43,8 +43,8 @@ message Payload {
 
 service Pyxart{
     rpc ping(Ping) returns (Pong) {};
-    rpc register(ClientRegister) returns (Pong) {};
-    rpc get_users(Empty) returns (stream ClientRegister);
+    rpc register(ClientRegistration) returns (Pong) {};
+    rpc get_users(Empty) returns (stream ClientRegistration);
     rpc get_my_groups(ClientName) returns (stream GroupInfo);
     rpc create_group(GroupCreation) returns (GroupName) {};
     rpc send_encrypted_message(Payload) returns (Pong) {};

@@ -1,4 +1,4 @@
-from client import Client
+from ..client import Client
 from collections import namedtuple, defaultdict
 import pickle
 import uuid

@@ -40,7 +40,7 @@ def create_group(members, creator_name, creator_priv_key):
         leaf_key = keyexchange(setup_key.priv, creator_priv_key, participant.iden_key_pub, participant.pre_key_pub)
         secrets.append(create_leaf_node(priv=leaf_key, name=f"Shared key between ({creator_name}, {participant.name})"))
     tree = compute_tree_secret(secrets)
-    return create_setup_message(tree, members, setup_key, creator_name), tree.priv
+    return create_setup_message(tree, members, setup_key, creator_name), tree.priv, creator_leaf_key.priv
 
 def create_copath(leaf_node):
     """
