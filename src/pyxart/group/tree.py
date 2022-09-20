@@ -1,8 +1,5 @@
 import math
 from pdb import set_trace
-import networkx as nx
-from networkx.drawing.nx_agraph import graphviz_layout
-import matplotlib.pyplot as plt
 
 class Node:
 
@@ -66,29 +63,3 @@ def get_leaves(node):
     if node.is_leaf():
         return [node]
     return get_leaves(node.left) + get_leaves(node.right)
-
-def to_networkx(node: Node):
-    def get_edges(node):
-        if node.is_leaf():
-            return []
-        return get_edges(node.left) + get_edges(node.right) + [(node.pub, node.left.pub), (node.pub, node.right.pub)]
-    
-    def get_nodes(node):
-        if node.is_leaf():
-            return [node]
-        return get_nodes(node.left) + [node] + get_nodes(node.right)
-
-    gr = nx.DiGraph()
-    for n in get_nodes(node):
-        gr.add_node(n.pub, name=n.name if n.name is not None else "")
-    edges = get_edges(node)
-    gr.add_edges_from(edges)
-    return gr
-
-def plot(G, title, fname):
-    # same layout using matplotlib with no labels
-    plt.title(f'{title}')
-    pos=graphviz_layout(G, prog='dot')
-    labels = nx.get_node_attributes(G, 'name') 
-    nx.draw(G, pos, labels=labels, node_shape='s', node_size=1000, arrows=True)
-    plt.savefig(f'{fname}.png')

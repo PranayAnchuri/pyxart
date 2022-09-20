@@ -29,9 +29,13 @@ readme = "README.md"
 python = "^3.7"
 pynacl = "^1.5"
 XEdDSA = "^0.6"
-networkx = "^2.5"
-matplotlib = "^3.0"
 cryptography = "^37.0.4"
+grpcio = "^1.48.1"
+grpcio-tools = ">=1.44,<2.0"
+protobuf = ">=3.20,<4.0"
+pytest = ">=7.1,<8.0"
+google-api-python-client = ">=2.45,<3.0"
+grpcio-reflection = ">=1.44,<2.0"
 
 [build-system]
 requires = ["poetry-core"]
