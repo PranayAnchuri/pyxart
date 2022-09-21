@@ -67,6 +67,7 @@ class GroupMessaging(Cmd):
 
     def do_get_my_groups(self, arg):
         'Get all groups'
+        import pdb; pdb.set_trace()
         response = GroupMessaging.stub.get_my_groups(pyxart_pb2.ClientName(name=client.name))
         for grp in response:
             # reconstruct group secret
@@ -93,6 +94,10 @@ class GroupMessaging(Cmd):
         box = nacl.secret.SecretBox(client.get_key(grp_name))
         for m in encrypted_messages:
             print_local_message(f"Decrypted message :unlocked: {box.decrypt(m).decode()}")
+    
+    def do_impersonate(self, arg):
+        '''Impersonate other user by chaning name'''
+        client.name = arg
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
