@@ -8,7 +8,7 @@ class Client:
 
     def __init__(self, name) -> None:
         self.name = name
-        self.shelf = shelve.open(f'{name}.db', writeback=True)
+        self.shelf = shelve.open(f'{name}', writeback=True)
         self.props = ['iden_key', 'pre_key', 'group_keys', 'group_creator_keys']
         if 'iden_key' not in self.shelf:
             self.shelf['iden_key'] = KeyPairCurve25519.generate()
