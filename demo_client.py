@@ -13,8 +13,15 @@ import sys
 from src.pyxart.client import Client
 from src.pyxart.group import create_group, process_group_message
 import nacl.secret
+from rich import print
 
 client = Client(name=sys.argv[1].casefold())
+
+def print_server_message(msg):
+    print(f':closed_mailbox_with_lowered_flag: {msg}')
+
+def print_local_message(msg):
+    print(f':rolled-up_newspaper: {msg}')
 
 class GroupMessaging(Cmd):
     intro = 'Welcome to the pyxart shell. Type help or ? to list commands.\n'
@@ -26,18 +33,21 @@ class GroupMessaging(Cmd):
     def do_ping(self, arg):
         'Ping server'
         response = GroupMessaging.stub.ping(pyxart_pb2.Ping(msg=f'hi, are you alive?'))
-        print("Message from server: " + response.msg)
+        print_server_message(response.msg)
     
     def do_register(self, arg):
         'Register client at the server by sending public keys'
         response = GroupMessaging.stub.register(pyxart_pb2.ClientRegistration(name=client.name, iden_key_pub=client.get_iden_key_pub(), pre_key_pub=client.get_pre_key_pub()))
-        print("Message from server: " + response.msg)
+        print_server_message(response.msg)
+    
+    def do_clear_db(self, arg):
+        client.shelf.clear()
 
     def do_get_users(self, arg):
         'Get public keys for all registered users'
         response = GroupMessaging.stub.get_users(pyxart_pb2.Empty())
         for r in response:
-            print(r)
+            print_local_message(r)
     
     def do_create_group(self, arg):
         'Create a group'
@@ -51,19 +61,17 @@ class GroupMessaging(Cmd):
         creation_message, secret, creator_key = create_group(others, client.name, client.get_iden_key_priv())
         creation_bytes = pickle.dumps(creation_message)
         response = GroupMessaging.stub.create_group(pyxart_pb2.GroupCreation(art=creation_bytes))
-        print(response)
+        print_server_message(response)
         client.add_to_cache(response.name, secret)
         client.add_creator_key(response.name, creator_key)
-        print(f"Secret is {secret}")
 
     def do_get_my_groups(self, arg):
         'Get all groups'
         response = GroupMessaging.stub.get_my_groups(pyxart_pb2.ClientName(name=client.name))
         for grp in response:
             # reconstruct group secret
-            print(f"Discovered group {grp.name.name}")
+            print_local_message(f"Discovered group {grp.name.name}")
             secret = process_group_message(grp, client, [_ for _ in GroupMessaging.stub.get_users(pyxart_pb2.Empty())])
-            print(f"Current group secret is {secret}")
             client.add_to_cache(grp.name.name, secret)
     
     def do_send_message(self, arg):
@@ -72,19 +80,19 @@ class GroupMessaging(Cmd):
         message = ' '.join(arg.split()[1:])
         box = nacl.secret.SecretBox(client.get_key(grp_name))
         encrypted_message = box.encrypt(message.encode())
-        print(f"Sending encrypted message {encrypted_message} to group {grp_name}")
+        print_local_message(f"Sending encrypted message \n :locked_with_key: {encrypted_message} \n to group {grp_name}")
         response = GroupMessaging.stub.send_encrypted_message(pyxart_pb2.Payload(group=pyxart_pb2.GroupName(name=grp_name), msg=pyxart_pb2.Text(msg=encrypted_message)))
-        print(response)
+        print_server_message(response)
 
     def do_get_messages(self, arg):
         'Retrieve encrypted messages and decrypt them locally'
         grp_name = arg.split()[0]
         response = GroupMessaging.stub.retrieve_encrypted_messages(pyxart_pb2.GroupName(name=grp_name))
         encrypted_messages = [x.msg for x in response]
-        print(f"Encrypted messages in the group \n {encrypted_messages}")
+        print_server_message(f"{encrypted_messages}")
         box = nacl.secret.SecretBox(client.get_key(grp_name))
         for m in encrypted_messages:
-            print(f"Decrypted message {box.decrypt(m).decode()}")
+            print_local_message(f"Decrypted message :unlocked: {box.decrypt(m).decode()}")
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
