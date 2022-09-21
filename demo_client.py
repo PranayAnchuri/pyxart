@@ -50,13 +50,13 @@ class GroupMessaging(Cmd):
             print_local_message(r)
     
     def do_create_group(self, arg):
-        'Create a group'
+        'Create a group with all users (default) or specified list of users'
         response = GroupMessaging.stub.get_users(pyxart_pb2.Empty())
         others = []
         # get case insensitive users
-        members = [x.casefold() for x in arg.split()]
+        members = [x.casefold() for x in arg.split()] if len(arg) > 0 else None
         for r in response:
-            if r.name != client.name and r.name.casefold() in members:
+            if r.name != client.name and (members is None or r.name.casefold() in members):
                 others.append(r)
         creation_message, secret, creator_key = create_group(others, client.name, client.get_iden_key_priv())
         creation_bytes = pickle.dumps(creation_message)
