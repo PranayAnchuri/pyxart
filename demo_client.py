@@ -14,7 +14,7 @@ from src.pyxart.client import Client
 from src.pyxart.group import create_group, process_group_message
 import nacl.secret
 
-client = Client(name=sys.argv[1])
+client = Client(name=sys.argv[1].casefold())
 
 class GroupMessaging(Cmd):
     intro = 'Welcome to the pyxart shell. Type help or ? to list commands.\n'
@@ -43,8 +43,10 @@ class GroupMessaging(Cmd):
         'Create a group'
         response = GroupMessaging.stub.get_users(pyxart_pb2.Empty())
         others = []
+        # get case insensitive users
+        members = [x.casefold() for x in arg.split()]
         for r in response:
-            if r.name != client.name:
+            if r.name != client.name and r.name.casefold() in members:
                 others.append(r)
         creation_message, secret, creator_key = create_group(others, client.name, client.get_iden_key_priv())
         creation_bytes = pickle.dumps(creation_message)
