@@ -9,9 +9,17 @@ def keyexchange(s1, s2, o1, o2):
     return crypto_scalarmult(s1, o2)
 
 def reduce_path(secret, path):
+    intermediate = []
     for node in path:
         secret = dh(secret.priv, node.pub)
-    return secret
+        intermediate.append(ProofNode(secret.pub))
+    return secret, intermediate
+
+def update_pub_on_path(secret, path):
+    for node in path:
+        secret = dh(secret.priv, node.pub)
+        node.parent[0].pub = secret.pub
+    return secret.priv
 
 
 def kdf(secret_key_material):

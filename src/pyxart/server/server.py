@@ -4,7 +4,7 @@ import pickle
 import uuid
 
 Bundle = namedtuple('Bundle', 'iden_key_pub pre_key_pub')
-Group = namedtuple('Group', 'members creation_message')
+Group = namedtuple('Group', 'members creation_message nonce')
 
 
 class Server:
@@ -24,8 +24,11 @@ class Server:
         grp = pickle.loads(creation_message)
         grp_key = str(uuid.uuid4())
         #self.groups.append(Group(grp.participants, creation_message))
-        self.groups[grp_key] = Group(grp.participants, creation_message)
+        self.groups[grp_key] = Group(grp.participants, creation_message, 0)
         return grp_key, grp.participants
+
+    def update_group(self, grp_key, creation_message):
+        self.groups[grp_key] = Group(self.groups[grp_key].members, creation_message, self.groups[grp_key].nonce+1)
     
     def get_groups(self, client_name):
         """ Return creation messages for all groups a member is part of"""

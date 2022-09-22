@@ -27,6 +27,10 @@ class PyxartServicer(pyxart_pb2_grpc.PyxartServicer):
         grp_key, members = self.server.register_group(request.art)
         return pyxart_pb2.GroupName(name=grp_key)
 
+    def update_group(self, request, context):
+        self.server.update_group(request.name.name, request.creation_message.art)
+        return pyxart_pb2.GroupName(name=request.name.name)
+
     def get_my_groups(self, request, context):
         for group_key, creation_message in self.server.get_groups(request.name):
             yield pyxart_pb2.GroupInfo(name=pyxart_pb2.GroupName(name=group_key), creation_message=pyxart_pb2.GroupCreation(art=creation_message))

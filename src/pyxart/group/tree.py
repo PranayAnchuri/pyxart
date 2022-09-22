@@ -63,3 +63,8 @@ def get_leaves(node):
     if node.is_leaf():
         return [node]
     return get_leaves(node.left) + get_leaves(node.right)
+
+
+def highest_power_of_2(n):
+    p = int(math.log(n, 2));
+    return int(pow(2, p));

@@ -26,6 +26,10 @@ class Client:
     def __str__(self) -> str:
         return f"Client name is {self.name}"
     
+    def update_keys(self):
+            self.shelf['iden_key'] = KeyPairCurve25519.generate()
+            self.shelf['pre_key'] = KeyPairCurve25519.generate()
+
     def cleanup(self):
         print("Running cleanup")
         self.shelf.close()

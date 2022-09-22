@@ -39,6 +39,11 @@ class PyxartStub(object):
                 request_serializer=pyxart__pb2.GroupCreation.SerializeToString,
                 response_deserializer=pyxart__pb2.GroupName.FromString,
                 )
+        self.update_group = channel.unary_unary(
+                '/Pyxart/update_group',
+                request_serializer=pyxart__pb2.GroupInfo.SerializeToString,
+                response_deserializer=pyxart__pb2.GroupName.FromString,
+                )
         self.send_encrypted_message = channel.unary_unary(
                 '/Pyxart/send_encrypted_message',
                 request_serializer=pyxart__pb2.Payload.SerializeToString,
@@ -84,6 +89,12 @@ class PyxartServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def update_group(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def send_encrypted_message(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -122,6 +133,11 @@ def add_PyxartServicer_to_server(servicer, server):
             'create_group': grpc.unary_unary_rpc_method_handler(
                     servicer.create_group,
                     request_deserializer=pyxart__pb2.GroupCreation.FromString,
+                    response_serializer=pyxart__pb2.GroupName.SerializeToString,
+            ),
+            'update_group': grpc.unary_unary_rpc_method_handler(
+                    servicer.update_group,
+                    request_deserializer=pyxart__pb2.GroupInfo.FromString,
                     response_serializer=pyxart__pb2.GroupName.SerializeToString,
             ),
             'send_encrypted_message': grpc.unary_unary_rpc_method_handler(
@@ -225,6 +241,23 @@ class Pyxart(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Pyxart/create_group',
             pyxart__pb2.GroupCreation.SerializeToString,
+            pyxart__pb2.GroupName.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def update_group(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/Pyxart/update_group',
+            pyxart__pb2.GroupInfo.SerializeToString,
             pyxart__pb2.GroupName.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
