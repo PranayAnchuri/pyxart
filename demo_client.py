@@ -7,23 +7,25 @@ import grpc
 import pickle
 import pyxart_pb2_grpc
 import pyxart_pb2
-from cmd import Cmd
+from cmd2 import Cmd
 import sys
 #sys.path.append('src/pyxart')
 from src.pyxart.client import Client
 from src.pyxart.group import create_group, process_group_message, update_group_message
 import nacl.secret
 from rich import print
+from rich.console import Console
 
 client = Client(name=sys.argv[1].casefold())
+console = Console()
 
 
 def print_server_message(msg):
-    print(f':closed_mailbox_with_lowered_flag: {msg}')
+    print(f'[bold uu green] :closed_mailbox_with_lowered_flag: {msg}')
 
 
 def print_local_message(msg):
-    print(f':rolled-up_newspaper: {msg}')
+    print(f'[italic frame blue] :rolled-up_newspaper: {msg}')
 
 
 class GroupMessaging(Cmd):
@@ -31,6 +33,9 @@ class GroupMessaging(Cmd):
     prompt = '(pyxart) '
     channel = grpc.insecure_channel('localhost:50051')
     stub = pyxart_pb2_grpc.PyxartStub(channel)
+
+    def __init__(self):
+        Cmd.__init__(self, allow_cli_args=False, include_py=True, include_ipy=True)
 
     # basic pyxart commands
     def do_ping(self, arg):
@@ -49,6 +54,7 @@ class GroupMessaging(Cmd):
         print_server_message(response.msg)
 
     def do_clear_db(self, arg):
+        '''Clear stored keys'''
         client.shelf.clear()
 
     def do_get_users(self, arg):
@@ -131,7 +137,7 @@ class GroupMessaging(Cmd):
         response = GroupMessaging.stub.retrieve_encrypted_messages(
             pyxart_pb2.GroupName(name=grp_name))
         encrypted_messages = [x.msg for x in response]
-        print_server_message(f"{encrypted_messages}")
+        print_server_message(encrypted_messages)
         try:
             box = nacl.secret.SecretBox(client.get_key(grp_name))
             for m in encrypted_messages:
@@ -141,7 +147,7 @@ class GroupMessaging(Cmd):
                 except:
                     print_local_message(f"Can't decrypt message {m} with key {client.get_key(grp_name)}")
         except:
-            print_local_message(f"Key not found for {grp_name}")
+            print_local_message(f"I don't have a key for the group {grp_name}")
 
     def do_impersonate(self, arg):
         '''Impersonate other user by chaning name'''
