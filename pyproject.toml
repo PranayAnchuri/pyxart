@@ -24,6 +24,7 @@ description = "Python implementation of Asynchronous Ratchet Trees"
 authors = ["Pranay Anchuri <pranay@xmtp.com>"]
 license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/PranayAnchuri/pyxart/"
 
 [tool.poetry.dependencies]
 python = "^3.7"
