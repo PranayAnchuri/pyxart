@@ -3,8 +3,12 @@ Python implementation of Asynchronous Ratchet Trees
 
 # Setup
 
-## Install dependencies
+## Install (conda + pip)
 
+```
+conda create --name <venv name> python=3.10
+pip install .
+```
 ## gRPC and protobuf
 
 ```
