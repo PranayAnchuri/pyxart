@@ -33,20 +33,21 @@ Create four shells A, B, C, and D
 
 In A,
 ```
-python demo_server.py
+python demo_server.py Alice
+register
 ```
 
 In B
 
 ```
-python demo_client.py Alice
+python demo_client.py Bob
 register
 ```
 
 In C
 
 ```
-python demo_client.py Bob
+python demo_client.py Charlie
 register
 ```
 
@@ -60,7 +61,7 @@ In B
 
 
 ```
-create_group
+create_group charlie dave
 ```
 
 In C, D
