@@ -81,6 +81,13 @@ In C, D
 get_messages <group_name>
 ```
 
+# Demo
+
+The following screenshot shows a demo of a grpc server and four clients.
+
+![](https://github.com/PranayAnchuri/pyxart/blob/main/demo.gif)
+
+
 
 # references
 
