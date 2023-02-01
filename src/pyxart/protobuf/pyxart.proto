@@ -1,55 +1,42 @@
 syntax = "proto2";
 
-message Ping {
-    required string msg = 1;
+service Pyxart {
+  rpc ping(Ping) returns (Pong) {};
+  rpc register(ClientRegistration) returns (Pong) {};
+  rpc get_users(Empty) returns (stream ClientRegistration);
+  rpc get_my_groups(ClientName) returns (stream GroupInfo);
+  rpc create_group(GroupCreation) returns (GroupName) {};
+  rpc update_group(GroupInfo) returns (GroupName) {};
+  rpc send_encrypted_message(Payload) returns (Pong) {};
+  rpc retrieve_encrypted_messages(GroupName) returns (stream Text) {};
 }
 
-message Pong {
-    required string msg = 1;
-}
+message Ping { required string msg = 1; }
+
+message Pong { required string msg = 1; }
 
 message ClientRegistration {
-    required string name = 1;
-    required bytes iden_key_pub = 2;
-    required bytes pre_key_pub = 3;
+  required string name = 1;
+  required bytes iden_key_pub = 2;
+  required bytes pre_key_pub = 3;
 }
 
-message Empty {
-}
+message Empty {}
 
-message ClientName {
-    required string name=1;
-}
+message ClientName { required string name = 1; }
 
-message GroupCreation {
-    required bytes art=1;
-}
+message GroupCreation { required bytes art = 1; }
 
 message GroupInfo {
-    required GroupName name=1;
-    required GroupCreation creation_message=2;
+  required GroupName name = 1;
+  required GroupCreation creation_message = 2;
 }
 
-message Text {
-    required bytes msg=1;
-}
+message Text { required bytes msg = 1; }
 
-message GroupName {
-    required string name=1;
-}
+message GroupName { required string name = 1; }
 
 message Payload {
-    required GroupName group=1;
-    required Text msg=2;
-}
-
-service Pyxart{
-    rpc ping(Ping) returns (Pong) {};
-    rpc register(ClientRegistration) returns (Pong) {};
-    rpc get_users(Empty) returns (stream ClientRegistration);
-    rpc get_my_groups(ClientName) returns (stream GroupInfo);
-    rpc create_group(GroupCreation) returns (GroupName) {};
-    rpc update_group(GroupInfo) returns (GroupName) {};
-    rpc send_encrypted_message(Payload) returns (Pong) {};
-    rpc retrieve_encrypted_messages(GroupName) returns (stream Text) {};
+  required GroupName group = 1;
+  required Text msg = 2;
 }
