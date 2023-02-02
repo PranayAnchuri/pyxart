@@ -44,6 +44,9 @@ class GroupMessaging(Cmd):
             pyxart_pb2.Ping(msg=f'hi, are you alive?'))
         print_server_message(response.msg)
 
+    def do_myname(self, arg):
+        print_local_message(client.name)
+
     def do_register(self, arg):
         'Register client at the server by sending public keys'
         response = GroupMessaging.stub.register(
